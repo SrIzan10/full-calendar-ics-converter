@@ -1,0 +1,38 @@
+name: Build and Upload Artifacts
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - uses: oven-sh/setup-bun@v1
+
+    - name: Build for Linux x64
+      run: bun build --compile --target=bun-linux-x64 ./index.ts --outfile mycli-linux-x64
+
+    - name: Build for Linux ARM64
+      run: bun build --compile --target=bun-linux-arm64 ./index.ts --outfile mycli-linux-arm64
+
+    - name: Build for Windows x64
+      run: bun build --compile --target=bun-windows-x64 ./index.ts --outfile mycli-windows-x64.exe
+
+    - name: Build for macOS x64
+      run: bun build --compile --target=bun-darwin-x64 ./index.ts --outfile mycli-macos-x64
+
+    - name: Build for macOS arm64
+      run: bun build --compile --target=bun-darwin-arm64 ./index.ts --outfile mycli-macos-arm64
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: mycli
+        path: |
+          mycli-linux-x64
+          mycli-linux-arm64
+          mycli-windows-x64.exe
+          mycli-macos-x64
+          mycli-macos-arm64
