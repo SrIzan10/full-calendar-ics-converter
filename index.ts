@@ -5,6 +5,7 @@ import { parseArgs } from 'util'
 import { argsSchema } from "./utils/types/schema";
 import removeLastSlash from "./utils/removeLastSlash";
 import getAverage from './utils/getAverage';
+import removeDirSpecialCharacters from './utils/removeDirSpecialCharacters';
 
 const { values } = parseArgs({
     args: Bun.argv,
@@ -48,7 +49,7 @@ for (const event of events) {
 
     const initialWritePerf = performance.now()
 
-    await Bun.write(`${removeLastSlash(parsedValues.data.out)}/${event.fileName}`, event.frontmatterContent)
+    await Bun.write(`${removeLastSlash(parsedValues.data.out)}/${removeDirSpecialCharacters(event.fileName)}`, event.frontmatterContent)
 
     const finalWritePerf = performance.now()
     writePerfArray.push(finalWritePerf - initialWritePerf)
